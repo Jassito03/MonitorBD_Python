@@ -1,7 +1,7 @@
 # Monitor de Base de Datos con Python
 ## Objetivo:
 
-El objetivo del proyecto es realizar un monitor para Bases de Datos Oracle, el cual despliegue gráficas para la visualización de la información.
+El objetivo del proyecto es realizar un monitor para la Base de Datos de Oracle, el cual despliegue gráficas para la visualización de la información de la tasa de HITS, por medio del Buffer Caché.
 
 **Librerías utilizadas:**
   * CX_Oracle
@@ -22,20 +22,18 @@ PORT = 1521 ; Modificar sólo si la base de datos se encuentra en otro puerto
 SERVICE_NAME = orcl ; Modificar con el nombre del servicio
 ENCODIG = UTF-8 ; Modificar sólo si se desea otro tipo de codificación 
 ```
+### Herramientas necesarias
+Para saber uso del CX_Oracle se deberá de instalar el build tools de C++. Se podrá instalar según el siguiente enlace: https://visualstudio.microsoft.com/es/visual-cpp-build-tools/
 
 ### Ingresar al entorno de Python
 Para ingresar se debe de ejecutar la siguiente instrucción en una terminal situada en la carpeta raíz del proyecto:
 
-**Windows:**
-```powershell
-.venv\Scripts\activate
+**Instalación de las librerías**
+En el archivo requirements.txt se encuentran todas las liberías y dependencias a instalar, por medio del siguiente comando:
 ```
-**MacOS o Linux:**
-```bash
-source .venv/bin/activate
+pip install -r requirements.txt
 ```
 
-Esto abrirá el entorno virtual Python el cual incluye las liberías utilizadas.
 ### Correr el programa
 Para correr la aplicación se debe ejecutar la siguiente instrucción:
 ```bash
