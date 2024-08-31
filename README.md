@@ -17,8 +17,9 @@ Se deben modificar las variables correspondientes a la base de datos del archivo
 [DATABASE]
 USERNAME = username ; Usuario que tenga privilegios de SYSDBA en la base de datos
 PASSWORD = password ; Modificar con la contraseña del usuario
-DNS = localhost/orcl ; Modificar con la ruta a utilizar
+URL = localhost ; Modificar con la ruta que tenga la base de datos a utilizar
 PORT = 1521 ; Modificar sólo si la base de datos se encuentra en otro puerto
+SERVICE_NAME = orcl ; Modificar con el nombre del servicio
 ENCODIG = UTF-8 ; Modificar sólo si se desea otro tipo de codificación 
 ```
 
