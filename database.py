@@ -18,4 +18,4 @@ class Database:
     def establecer_conexion(self):
         """Método para iniciar la conexión con la BD"""
         dns = cx_Oracle.makedns(self._url, self._port, self._service_name)
-        self.connection = cx_Oracle.connect(user=self._username, password=self._password, dns=dns, encoding=self._encoding)
+        self.connection = cx_Oracle.connect(user=self._username, password=self._password, dns=dns, encoding=self._encoding, mode=cx_Oracle.SYSDBA)
