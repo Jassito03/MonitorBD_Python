@@ -25,10 +25,7 @@ ENCODIG = UTF-8 ; Modificar sólo si se desea otro tipo de codificación
 ### Herramientas necesarias
 Para saber uso del CX_Oracle se deberá de instalar el build tools de C++. Se podrá instalar según el siguiente enlace: https://visualstudio.microsoft.com/es/visual-cpp-build-tools/
 
-### Ingresar al entorno de Python
-Para ingresar se debe de ejecutar la siguiente instrucción en una terminal situada en la carpeta raíz del proyecto:
-
-**Instalación de las librerías**
+### Instalación de las librerías
 En el archivo requirements.txt se encuentran todas las liberías y dependencias a instalar, por medio del siguiente comando:
 ```
 pip install -r requirements.txt
