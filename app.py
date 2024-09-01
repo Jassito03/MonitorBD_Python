@@ -5,12 +5,6 @@ import plotly
 import json
 
 app = Flask(__name__)
-df = pd.DataFrame({
-    "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
-    "Amount": [4, 1, 2, 2, 4, 5],
-    "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"]
-    })
-
 """Crear un dataset en donde el eje x sean los segundos
 y el eje y el porcentaje del 1 al 100 con respecto a la tasa
 sería bueno compartir un punto en específico.
