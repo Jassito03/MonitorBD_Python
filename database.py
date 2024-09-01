@@ -2,7 +2,8 @@ import configparser
 import cx_Oracle
 import os
 import sys
-import os
+import plotly.express as px
+
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -31,23 +32,66 @@ class Database:
         except cx_Oracle.DatabaseError as e:
             print(f"Error al conectar a la base de datos: {e}")
 
-    def consulta_reads(self):
+    def tasa_de_hit(self):
+        if self.connection is None:
+            print("La conexión no está establecida")
+            return
+        try:
+            cursor = self.connection.cursor()
+            query = ("SELECT" 
+            "(1 - (physical_reads.value / logical_reads.value)) * 100 AS \"Tasa de Hit del Buffer Cache (%)\" "
+            "FROM (SELECT value FROM V$SYSSTAT WHERE name = 'db block gets') physical_reads, "
+            "(SELECT value FROM V$SYSSTAT WHERE name = 'consistent gets') logical_reads")
+            cursor.execute(query)
+            tablas = cursor.fetchall()
+            
+            for tabla in tablas:
+                total = tabla[0]
+                porcentaje = f"{total:.2f}"
+                print(porcentaje)
+            cursor.close()
+            return porcentaje
+        except cx_Oracle.DatabaseError as e:
+            print(f"Error al ejecutar la consulta tasa de hits: {e}")
+        
+    def total_lecturas_fisicas(self):
         if self.connection is None:
             print("La conexión no está establecida.")
             return
 
         try:
             cursor = self.connection.cursor()
-            query = "SELECT * FROM ALUMNO"
+            query = "SELECT name, value FROM V$SYSSTAT WHERE name IN ('physical writes')"
             cursor.execute(query)
             tablas = cursor.fetchall()
+            total = 0
             for tabla in tablas:
-                print(tabla[0])
+                total = tabla[1]
             cursor.close()
+            return total
         except cx_Oracle.DatabaseError as e:
-            print(f"Error al ejecutar la consulta: {e}")
+            print(f"Error al ejecutar la consulta total de lecturas fisicas: {e}")
+
+    def total_lecturas_logicas(self):
+        if self.connection is None:
+            print("La conexión no está establecida.")
+            return
+
+        try:
+            cursor = self.connection.cursor()
+            query = "SELECT name, value FROM V$SYSSTAT WHERE name IN ('db block changes');"
+            cursor.execute(query)
+            tablas = cursor.fetchall()
+            total = 0
+            for tabla in tablas:
+                total = tabla[1]
+            cursor.close()
+            return total
+        except cx_Oracle.DatabaseError as e:
+            print(f"Error al ejecutar la consulta total de lecturas logicas: {e}")
 
 
 myDB = Database()
 myDB.establecer_conexion()
-myDB.consulta_reads()
+myDB.total_lecturas_fisicas()
+myDB.tasa_de_hit()

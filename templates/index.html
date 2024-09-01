@@ -12,9 +12,9 @@
     </header>
     <section class="grafico"> 
         <h2>Tasa de hits en el buffer cache</h2>
-        <article> <!--Articulo donde se visualiza el gráfico dinámico-->
-
-        </article>
+        <div id="chart"><!--Articulo donde se visualiza el gráfico dinámico-->
+            
+        </div>
     </section>
     <section class="descripcion_grafico">
         <p>
@@ -36,3 +36,8 @@
     </footer>
 </body>
 </html>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    var graph = {{graphJSON | safe}};
+    Plotly.plot("chart",graph,{})
+</script>

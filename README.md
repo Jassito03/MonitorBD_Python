@@ -20,10 +20,17 @@ PASSWORD = password ; Modificar con la contraseña del usuario
 URL = localhost ; Modificar con la ruta que tenga la base de datos a utilizar
 PORT = 1521 ; Modificar sólo si la base de datos se encuentra en otro puerto
 SERVICE_NAME = orcl ; Modificar con el nombre del servicio
-ENCODIG = UTF-8 ; Modificar sólo si se desea otro tipo de codificación 
+ENCODING = UTF-8 ; Modificar sólo si se desea otro tipo de codificación 
+INSTANCE_CLIENT = ruta; Modificar la ruta en donde se encuentra la instancia del cliente de Oracle
 ```
 ### Herramientas necesarias
+#### C++ Build Tools
 Para saber uso del CX_Oracle se deberá de instalar el build tools de C++. Se podrá instalar según el siguiente enlace: https://visualstudio.microsoft.com/es/visual-cpp-build-tools/
+
+#### Oracle Instance Client
+Es necesario haber instalado el Oracle Instance Client para poder establecer la conexión con el sistema, además de haberlo agregado como variable de entorno del sistema.
+Para poder descargarlo puede descargarlo en la pagina oficial de Oracle: https://www.oracle.com/database/technologies/instant-client/downloads.html
+
 
 ### Instalación de las librerías
 En el archivo requirements.txt se encuentran todas las liberías y dependencias a instalar, por medio del siguiente comando:
