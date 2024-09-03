@@ -30,7 +30,8 @@ class Database:
                 user=self._username, 
                 password=self._password, 
                 dsn=dns, 
-                encoding=self._encoding
+                encoding=self._encoding,
+                mode=cx_Oracle.SYSDBA
             )
             print("Conexión exitosa")
         except cx_Oracle.DatabaseError as e:

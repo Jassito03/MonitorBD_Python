@@ -6,6 +6,7 @@ import plotly.io as pio
 from database import Database
 
 app = Flask(__name__)
+db = Database()
 
 """Crear un dataset en donde el eje x sean los segundos
 y el eje y el porcentaje del 1 al 100 con respecto a la tasa
@@ -15,23 +16,20 @@ Por el sueño no sé si sea necesario, ya que en el gráfico se ven los porcenta
 
 @app.route('/')
 def index():
-    return render_template("index.html")
+    return render_template('index.html')
 
 @app.route('/data')
 def get_data():
-    db = Database()
     db.establecer_conexion()
     tasa_hit = db.tasa_de_hit()
     lecturas_fisicas = db.total_lecturas_fisicas()
     lecturas_logicas = db.total_lecturas_logicas()
-    data = [{
+    data = {
         "fecha" : time.time(),
         "tasa_hit" : tasa_hit,
         "lecturas_fisicas" : lecturas_fisicas,
         "lecturas_logicas" : lecturas_logicas,
-    }]
-    #df = pd.DataFrame(data, columns=['fecha', 'tasa_hit', 'lecturas_fisicas', 'lecturas_logicas'])
-    #result = df.to_dict(orient='records')
+    }
     return jsonify(data)
 
 
