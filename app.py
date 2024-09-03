@@ -1,8 +1,5 @@
 import time
 from flask import Flask, jsonify, render_template
-import pandas as pd
-import plotly.express as px
-import plotly.io as pio
 from database import Database
 
 app = Flask(__name__)
