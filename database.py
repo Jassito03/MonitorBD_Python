@@ -1,7 +1,5 @@
 import configparser
 import cx_Oracle
-import os
-import sys
 import plotly.express as px
 
 
@@ -27,10 +25,17 @@ class Database:
         """Método para iniciar la conexión con la BD"""
         try:
             dns = cx_Oracle.makedsn(self._url, self._port, service_name=self._service_name)
-            self.connection = cx_Oracle.connect(user=self._username, password=self._password, dsn=dns, encoding=self._encoding, mode=cx_Oracle.SYSDBA)
+            print(dns)
+            self.connection = cx_Oracle.connect(
+                user=self._username, 
+                password=self._password, 
+                dsn=dns, 
+                encoding=self._encoding
+            )
             print("Conexión exitosa")
         except cx_Oracle.DatabaseError as e:
             print(f"Error al conectar a la base de datos: {e}")
+            traceback.print_exc()
 
     def tasa_de_hit(self):
         if self.connection is None:
@@ -58,17 +63,18 @@ class Database:
         if self.connection is None:
             print("La conexión no está establecida.")
             return
-
         try:
             cursor = self.connection.cursor()
-            query = "SELECT name, value FROM V$SYSSTAT WHERE name IN ('physical writes')"
+            #query = "SELECT name, value FROM V$SYSSTAT WHERE name IN ('physical writes')"
+            query = "SELECT value FROM V$SYSSTAT WHERE name = 'db block gets'"
             cursor.execute(query)
             tablas = cursor.fetchall()
-            total = 0
-            for tabla in tablas:
-                total = tabla[1]
+            #total = 0
+            #for tabla in tablas:
+            #    total = tabla[1]
             cursor.close()
-            return total
+            return tablas[0][0]
+            #return total
         except cx_Oracle.DatabaseError as e:
             print(f"Error al ejecutar la consulta total de lecturas fisicas: {e}")
 
@@ -76,22 +82,17 @@ class Database:
         if self.connection is None:
             print("La conexión no está establecida.")
             return
-
         try:
             cursor = self.connection.cursor()
-            query = "SELECT name, value FROM V$SYSSTAT WHERE name IN ('db block changes');"
+            #query = "SELECT name, value FROM V$SYSSTAT WHERE name IN ('db block changes');"
+            query = "SELECT value FROM V$SYSSTAT WHERE name = 'consistent gets'"
             cursor.execute(query)
             tablas = cursor.fetchall()
-            total = 0
-            for tabla in tablas:
-                total = tabla[1]
+            #total = 0
+            #for tabla in tablas:
+            #    total = tabla[1]
             cursor.close()
-            return total
+            return tablas[0][0]
+            #return total
         except cx_Oracle.DatabaseError as e:
             print(f"Error al ejecutar la consulta total de lecturas logicas: {e}")
-
-
-myDB = Database()
-myDB.establecer_conexion()
-myDB.total_lecturas_fisicas()
-myDB.tasa_de_hit()

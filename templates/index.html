@@ -12,15 +12,14 @@
     </header>
     <section class="grafico"> 
         <h2>Tasa de hits en el buffer cache</h2>
-        <div id="chart"><!--Articulo donde se visualiza el gráfico dinámico-->
-            
+        <div id="graph"><!--Articulo donde se visualiza el gráfico dinámico-->
         </div>
     </section>
     <section class="descripcion_grafico">
         <p>
-            Lecturas Lógicas: 
-            Lecturas Físicas: 
-            Tasa de Hit: 
+            Lecturas Lógicas: <span id="lecturas_logicas: "> {{data.lecturas_logicas}}</span><br>
+            Lecturas Físicas: <span id="lecturas_fisicas">{{data.lecturas_fisicas}}</span><br>
+            Tasa de Hit: <span id="tasa_hit">{{data.tasa_hit}}</span>%
         </p>
     </section> 
     <footer>
@@ -38,6 +37,32 @@
 </html>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script>
-    var graph = {{graphJSON | safe}};
-    Plotly.plot("chart",graph,{})
+    async function fetchData() {
+        const response = await fetch('/data');
+        const data = await response.json();
+        return data;
+    }
+    async function updateGraph() {
+        const data = await fetchData();
+        const fechas = data.map(d => newDate(d.fecha*1000).toLocaleTimeString());
+        const tasa_hits = data.map(d => d.tasa_hit);            
+        const lecturas_fisicas = data.map(d => d.lecturas_fisicas);
+        const lecturas_logicas = data.map(d => d.lecturas_logicas);
+
+        const trace1 = { x: fechas, y: tasa_hits, name: 'Tasa de Hit', type: 'scatter' };
+        const trace2 = { x: fechas, y: lecturas_fisicas, name: 'Lecturas Físicas', type: 'scatter' };
+        const trace3 = { x: fechas, y: lecturas_logicas, name: 'Lecturas Lógicas', type: 'scatter' };
+
+       const layout = { title: 'Tasa de Hit y Lecturas', xaxis: { title: 'Fecha' }, yaxis: { title: 'Valores' } };
+        Plotly.newPlot('graph', [trace1, trace2, trace3], layout);
+        document.getElementById('lecturas_logicas').innerText = lecturas_logicas[lecturas_logicas.length - 1];
+        document.getElementById('lecturas_fisicas').innerText = lecturas_fisicas[lecturas_fisicas.length - 1];
+        document.getElementById('tasa_hit').innerText = tasa_hits[tasa_hits.length - 1];
+    }
+
+    // Actualiza el gráfico cada 5 segundos
+    setInterval(updateGraph, 5000);
+
+   // Llamar a la función una vez para cargar inicialmente
+    updateGraph();
 </script>
