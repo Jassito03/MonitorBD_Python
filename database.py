@@ -1,11 +1,8 @@
 import configparser
 import cx_Oracle
-import plotly.express as px
-
 
 config = configparser.ConfigParser()
 config.read('config.ini')
-
 
 instance_client = config['DATABASE']['INSTANCE_CLIENT']
 cx_Oracle.init_oracle_client(lib_dir = instance_client)
@@ -66,16 +63,11 @@ class Database:
             return
         try:
             cursor = self.connection.cursor()
-            #query = "SELECT name, value FROM V$SYSSTAT WHERE name IN ('physical writes')"
             query = "SELECT value FROM V$SYSSTAT WHERE name = 'db block gets'"
             cursor.execute(query)
             tablas = cursor.fetchall()
-            #total = 0
-            #for tabla in tablas:
-            #    total = tabla[1]
             cursor.close()
             return tablas[0][0]
-            #return total
         except cx_Oracle.DatabaseError as e:
             print(f"Error al ejecutar la consulta total de lecturas fisicas: {e}")
 
@@ -85,15 +77,10 @@ class Database:
             return
         try:
             cursor = self.connection.cursor()
-            #query = "SELECT name, value FROM V$SYSSTAT WHERE name IN ('db block changes');"
             query = "SELECT value FROM V$SYSSTAT WHERE name = 'consistent gets'"
             cursor.execute(query)
             tablas = cursor.fetchall()
-            #total = 0
-            #for tabla in tablas:
-            #    total = tabla[1]
             cursor.close()
             return tablas[0][0]
-            #return total
         except cx_Oracle.DatabaseError as e:
             print(f"Error al ejecutar la consulta total de lecturas logicas: {e}")

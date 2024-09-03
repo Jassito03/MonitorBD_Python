@@ -1,6 +1,7 @@
 import time
 from flask import Flask, jsonify, render_template
 from database import Database
+import pandas as pd
 
 app = Flask(__name__)
 db = Database()
@@ -18,16 +19,21 @@ def index():
 @app.route('/data')
 def get_data():
     db.establecer_conexion()
-    tasa_hit = db.tasa_de_hit()
-    lecturas_fisicas = db.total_lecturas_fisicas()
-    lecturas_logicas = db.total_lecturas_logicas()
-    data = {
-        "fecha" : time.time(),
-        "tasa_hit" : tasa_hit,
-        "lecturas_fisicas" : lecturas_fisicas,
-        "lecturas_logicas" : lecturas_logicas,
-    }
-    return jsonify(data)
+    tasa_hit = []
+    lecturas_fisicas = []
+    lecturas_logicas = []
+    for x in range(5):
+        tasa_hit.append(db.tasa_de_hit())
+        lecturas_fisicas.append(db.total_lecturas_fisicas())
+        lecturas_logicas.append(db.total_lecturas_logicas())
+
+        data = {
+            'tasa_hits': tasa_hit,
+            'lecturas_fisicas': lecturas_fisicas,
+            'lecturas_logicas': lecturas_logicas
+        }
+    df = pd.DataFrame(data=data, columns=['tasa_hits', 'lecturas_fisicas', 'lecturas_logicas'])
+    return df.to_json()
 
 
 @app.route('/ping')
