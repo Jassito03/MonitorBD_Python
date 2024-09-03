@@ -1,4 +1,3 @@
-import time
 from flask import Flask, jsonify, render_template
 from database import Database
 import pandas as pd
