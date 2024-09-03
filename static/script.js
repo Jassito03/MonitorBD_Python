@@ -16,8 +16,11 @@ async function updateGraph() {
 
     const layout = { title: 'Tasa de Hit y Lecturas', xaxis: { title: 'Segundos' }, yaxis: { title: 'Valores' } };
     Plotly.newPlot('graph', [trace1, trace2, trace3], layout);
+    
+    document.getElementById('lecturas_logicas').textContent = lecturas_logicas[Object.keys(lecturas_logicas)[Object.keys(lecturas_logicas).length - 1]];
+    document.getElementById('lecturas_fisicas').textContent = lecturas_fisicas[Object.keys(lecturas_fisicas)[Object.keys(lecturas_fisicas).length - 1]];
+    document.getElementById('tasa_hit').textContent = tasa_hits[Object.keys(tasa_hits)[Object.keys(tasa_hits).length - 1]];
 }
-
 // Actualiza el gráfico cada 5 segundos
 setInterval(updateGraph, 5000);
 

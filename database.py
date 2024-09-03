@@ -22,13 +22,11 @@ class Database:
         """Método para iniciar la conexión con la BD"""
         try:
             dns = cx_Oracle.makedsn(self._url, self._port, service_name=self._service_name)
-            print(dns)
             self.connection = cx_Oracle.connect(
                 user=self._username, 
                 password=self._password, 
                 dsn=dns, 
-                encoding=self._encoding,
-                mode=cx_Oracle.SYSDBA
+                encoding=self._encoding
             )
             print("Conexión exitosa")
         except cx_Oracle.DatabaseError as e:
@@ -51,7 +49,6 @@ class Database:
             for tabla in tablas:
                 total = tabla[0]
                 porcentaje = f"{total:.2f}"
-                print(porcentaje)
             cursor.close()
             return porcentaje
         except cx_Oracle.DatabaseError as e:
