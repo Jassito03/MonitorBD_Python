@@ -50,11 +50,11 @@ def get_tablespaces():
     info_tablespaces = db.calculo_tablespaces()
     return info_tablespaces.to_json()
 
-@app.route('/estructura_fisica')
-def get_estructura_fisica():
+@app.route('/bitacoras')
+def get_bitacoras():
     db.establecer_conexion()
-    info_estructura_fisica = db.estructura_fisica()
-    return info_estructura_fisica.to_json()
+    info_bitacoras = db.bitacoras()
+    return info_bitacoras.to_json()
 
 @app.route('/ping')
 def ping():

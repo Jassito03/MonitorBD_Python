@@ -97,16 +97,51 @@ class Database:
         except cx_Oracle.DatabaseError as e:
             print(f"Error al ejecutar la consulta total de lecturas logicas: {e}")
 
-    def estructura_fisica(self):
+    def calculo_tablespaces(self):
         if self.connection is None:
             print("La conexión no está establecida.")
             return
         try:
             cursor = self.connection.cursor()
-            query = "SELECT l.status AS estado, f.member AS nombre_archivo FROM v$log l JOIN v$logfile f ON l.group# = f.group# ORDER BY l.group#;"
+            query = """
+            SELECT a.tablespace_name,
+                b.size_kb / 1024 AS SIZE_MB,
+                a.free_kb / 1024 AS FREE_MB,
+                (b.size_kb - a.free_kb) / 1024 AS USED_MB,
+                TRUNC((a.free_kb / b.size_kb) * 100) AS "FREE_%"
+            FROM (SELECT tablespace_name,
+                        TRUNC(SUM(bytes) / 1024) AS free_kb
+                FROM dba_free_space
+                GROUP BY tablespace_name) a,
+                (SELECT tablespace_name,
+                        TRUNC(SUM(bytes) / 1024) AS size_kb
+                FROM dba_data_files
+                GROUP BY tablespace_name) b
+            WHERE a.tablespace_name = b.tablespace_name
+            ORDER BY "FREE_%" DESC
+            """
+            cursor.execute(query)
+            tablas = cursor.fetchall()
+            df = pd.DataFrame(tablas, columns=['Nombres', 'Tamanio Total', 'Memoria Libre', 'Memoria Usada', 'Porcentaje Libre'])
+            return df
+        except cx_Oracle.DatabaseError as e:
+            print(f"Error al ejecutar la consulta del tamaño total de los tablespaces: {e}")
+
+    def bitacoras(self):
+        if self.connection is None:
+            print("La conexión no está establecida.")
+            return
+        try:
+            cursor = self.connection.cursor()
+            query = "SELECT l.status AS estado, f.member AS nombre_archivo FROM v$log l JOIN v$logfile f ON l.group# = f.group# ORDER BY l.group#"
             cursor.execute(query)
             estados = cursor.fetchall()
+            df = pd.DataFrame(estados, columns=['Estado', 'Nombre'])
             cursor.close()
-            return estados
+            return df
         except cx_Oracle.DatabaseError as e:
             print(f"Error al ejecutar la consulta total de lecturas logicas: {e}")
+
+myDB = Database()
+myDB.establecer_conexion()
+myDB.bitacoras()
