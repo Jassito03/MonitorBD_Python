@@ -39,11 +39,12 @@ section.descripcion_grafico {
 }
 
 footer {
-    position: absolute;
-    bottom: 0%; 
-    display: flex; 
-    width: 100vw; 
-    justify-content: flex-end;
+    background-color:white;
+    padding: 1rem;
+    text-align: left;
+    position: relative;
+    bottom: 0;
+    width: 15rem;
 }
 
 footer aside {

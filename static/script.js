@@ -55,38 +55,15 @@ async function tablespacesGraph(){
 
     const nombres = dataTablespaces['Nombres'];
     console.log(dataTablespaces['Nombres']);
-    const tamanio_total = dataTablespaces['Tamanio total'];
-    console.log(dataTablespaces['Tamanio Total']);
     const memoria_usada = dataTablespaces['Memoria Usada'];
-    console.log(dataTablespaces['Memoria Usada']);
-    const memoria_libre = dataTablespaces['Memoria libre'];
+    const memoria_libre = dataTablespaces['Memoria Libre'];
+
+    var trace1 = {x: Object.values(nombres), y: Object.values(memoria_usada), name: 'Memoria Usada (MB)',type: 'bar'};
+    var trace2 = {x: Object.values(nombres), y: Object.values(memoria_libre), name: 'Memoria Libre (MB)', type: 'bar'};
+    
       
-      var trace2 = {x: Object.values(nombres), y: Object.values(memoria_libre), name: 'Memoria Libre (MB)', type: 'bar'};
-      var trace1 = {x: Object.values(nombres), y: Object.values(memoria_usada), name: 'Memoria Usada (MB)',type: 'bar'};
+    var data = [trace1, trace2];
       
-      var data = [trace1, trace2];
-      
-      var layout = {barmode: 'stack'};
-      Plotly.newPlot('graph_tablespaces', data, layout);
-      
-     /*
-      var trace1 = {
-        x: ['giraffes', 'orangutans', 'monkeys'],
-        y: [1800, 14, 23],
-        name: 'SF Zoo',
-        type: 'bar'
-      };
-      
-      var trace2 = {
-        x: ['giraffes', 'orangutans', 'monkeys'],
-        y: [1750, 18, 29],
-        name: 'LA Zoo',
-        type: 'bar'
-      };
-      
-      var data = [trace2, trace1];
-      
-      var layout = {barmode: 'stack'};
-      
-      Plotly.newPlot('graph_tablespaces', data, layout);*/
+    var layout = {barmode: 'stack'};
+    Plotly.newPlot('graph_tablespaces', data, layout);
 }

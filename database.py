@@ -107,23 +107,25 @@ class Database:
         try:
             cursor = self.connection.cursor()
             query = """
-            SELECT 
-                df.TABLESPACE_NAME AS "Nombre Tablespace",
-                ROUND(SUM(df.BYTES) / 1024 / 1024, 2) AS "Tamaño Total MB",
-                ROUND((SUM(df.BYTES) - SUM(fs.BYTES)) / 1024 / 1024, 2) AS "Espacio Usado MB",
-                ROUND(SUM(fs.BYTES) / 1024 / 1024, 2) AS "Espacio Libre MB"
-            FROM 
-                DBA_DATA_FILES df
-            LEFT JOIN 
-                DBA_FREE_SPACE fs
-            ON 
-                df.TABLESPACE_NAME = fs.TABLESPACE_NAME
-            GROUP BY 
-                df.TABLESPACE_NAME
+            SELECT a.tablespace_name,
+                b.size_kb / 1024 AS SIZE_MB,
+                a.free_kb / 1024 AS FREE_MB,
+                (b.size_kb - a.free_kb) / 1024 AS USED_MB,
+                TRUNC((a.free_kb / b.size_kb) * 100) AS "FREE_%"
+            FROM (SELECT tablespace_name,
+                        TRUNC(SUM(bytes) / 1024) AS free_kb
+                FROM dba_free_space
+                GROUP BY tablespace_name) a,
+                (SELECT tablespace_name,
+                        TRUNC(SUM(bytes) / 1024) AS size_kb
+                FROM dba_data_files
+                GROUP BY tablespace_name) b
+            WHERE a.tablespace_name = b.tablespace_name
+            ORDER BY "FREE_%" DESC
             """
             cursor.execute(query)
             tablas = cursor.fetchall()
-            df = pd.DataFrame(tablas, columns=['Nombres', 'Tamanio total', 'Memoria Usada', 'Memoria libre'])
+            df = pd.DataFrame(tablas, columns=['Nombres', 'Tamanio Total', 'Memoria Libre', 'Memoria Usada', 'Porcentaje Libre'])
             return df
         except cx_Oracle.DatabaseError as e:
             print(f"Error al ejecutar la consulta del tamaño total de los tablespaces: {e}")
