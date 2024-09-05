@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
     <title>Monitor</title>
 </head>
 <body>
@@ -13,8 +14,8 @@
     </header>
     <section class="grafico"> 
         <h2>Tasa de hits en el buffer cache</h2>
-        <div id="graph"><!--Articulo donde se visualiza el gráfico dinámico-->
-            <script src="{{ url_for('static', filename='script.js') }}"></script>
+        <div id="graph"><!--Monitoreo Tasa de HITS-->
+            <!--Aquí iba el script-->
         </div>
     </section>
     </br>
@@ -25,6 +26,23 @@
             Tasa de Hit: <span id="tasa_hit"></span>%
         </p>
     </section> 
+    <!--A partir de aquí realizo los cambios, lo de arriba funciona bien-->
+    <section class="grafico"> 
+        <h2>Tablespaces</h2>
+        <div id="graph_tablespaces"><!--Monitoreo Tablespaces-->
+            <!--Aqui iba el script-->
+        </div>
+    </section>
+    </br>
+    <!--
+    <section class="descripcion_grafico">
+        <p>
+            Lecturas Lógicas: <span id="lecturas_logicas"></span><br>
+            Lecturas Físicas: <span id="lecturas_fisicas"></span><br>
+            Tasa de Hit: <span id="tasa_hit"></span>%
+        </p>
+    </section> 
+-->
     <footer>
         <aside>
             <b>Desarrollado por:</b>

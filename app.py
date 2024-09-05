@@ -1,3 +1,14 @@
+"""
+Autores:
+Nombre: Joseph Piñar Baltodano
+ID: 1 1890 0308
+
+Nombre: Abigail Salas Ramírez
+ID: 4 0257 0890
+
+Nombre: Gianpablo Moreno Castro
+ID: 4 0261 0240
+"""
 from flask import Flask, jsonify, render_template
 from database import Database
 import pandas as pd
@@ -5,11 +16,10 @@ import pandas as pd
 app = Flask(__name__)
 db = Database()
 
-"""Crear un dataset en donde el eje x sean los segundos
-y el eje y el porcentaje del 1 al 100 con respecto a la tasa
-sería bueno compartir un punto en específico.
-Hay que investigar bien cómo se crea un dataframe para tres líneas y que hagan match en los datos de los ejes
-Por el sueño no sé si sea necesario, ya que en el gráfico se ven los porcentajes y abajo se ve la cantidad total"""
+"""
+Servidor
+
+"""
 
 @app.route('/')
 def index():
@@ -34,6 +44,11 @@ def get_data():
     df = pd.DataFrame(data=data, columns=['tasa_hits', 'lecturas_fisicas', 'lecturas_logicas'])
     return df.to_json()
 
+@app.route('/tablespaces')
+def get_tablespaces():
+    db.establecer_conexion()
+    info_tablespaces = db.calculo_tablespaces()
+    return info_tablespaces.to_json()
 
 @app.route('/ping')
 def ping():

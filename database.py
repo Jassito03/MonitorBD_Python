@@ -1,5 +1,19 @@
+"""
+Autores:
+Nombre: Joseph Piñar Baltodano
+ID: 1 1890 0308
+
+Nombre: Abigail Salas Ramírez
+ID: 4 0257 0890
+
+Nombre: Gianpablo Moreno Castro
+ID: 4 0261 0240
+"""
+
+
 import configparser
 import cx_Oracle
+import pandas as pd
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -22,11 +36,13 @@ class Database:
         """Método para iniciar la conexión con la BD"""
         try:
             dns = cx_Oracle.makedsn(self._url, self._port, service_name=self._service_name)
+            print(dns)
             self.connection = cx_Oracle.connect(
                 user=self._username, 
                 password=self._password, 
                 dsn=dns, 
-                encoding=self._encoding
+                encoding=self._encoding,
+                mode=cx_Oracle.SYSDBA
             )
             print("Conexión exitosa")
         except cx_Oracle.DatabaseError as e:
@@ -39,10 +55,12 @@ class Database:
             return
         try:
             cursor = self.connection.cursor()
-            query = ("SELECT" 
-            "(1 - (physical_reads.value / logical_reads.value)) * 100 AS \"Tasa de Hit del Buffer Cache (%)\" "
-            "FROM (SELECT value FROM V$SYSSTAT WHERE name = 'db block gets') physical_reads, "
-            "(SELECT value FROM V$SYSSTAT WHERE name = 'consistent gets') logical_reads")
+            query = """
+            SELECT
+            (1 - (physical_reads.value / logical_reads.value)) * 100 AS "Tasa de Hit del Buffer Cache (%)"
+            FROM (SELECT value FROM V$SYSSTAT WHERE name = 'db block gets') physical_reads, 
+            (SELECT value FROM V$SYSSTAT WHERE name = 'consistent gets') logical_reads
+            """
             cursor.execute(query)
             tablas = cursor.fetchall()
             
@@ -81,3 +99,31 @@ class Database:
             return tablas[0][0]
         except cx_Oracle.DatabaseError as e:
             print(f"Error al ejecutar la consulta total de lecturas logicas: {e}")
+
+    def calculo_tablespaces(self):
+        if self.connection is None:
+            print("La conexión no está establecida.")
+            return
+        try:
+            cursor = self.connection.cursor()
+            query = """
+            SELECT 
+                df.TABLESPACE_NAME AS "Nombre Tablespace",
+                ROUND(SUM(df.BYTES) / 1024 / 1024, 2) AS "Tamaño Total MB",
+                ROUND((SUM(df.BYTES) - SUM(fs.BYTES)) / 1024 / 1024, 2) AS "Espacio Usado MB",
+                ROUND(SUM(fs.BYTES) / 1024 / 1024, 2) AS "Espacio Libre MB"
+            FROM 
+                DBA_DATA_FILES df
+            LEFT JOIN 
+                DBA_FREE_SPACE fs
+            ON 
+                df.TABLESPACE_NAME = fs.TABLESPACE_NAME
+            GROUP BY 
+                df.TABLESPACE_NAME
+            """
+            cursor.execute(query)
+            tablas = cursor.fetchall()
+            df = pd.DataFrame(tablas, columns=['Nombres', 'Tamanio total', 'Memoria Usada', 'Memoria libre'])
+            return df
+        except cx_Oracle.DatabaseError as e:
+            print(f"Error al ejecutar la consulta del tamaño total de los tablespaces: {e}")
