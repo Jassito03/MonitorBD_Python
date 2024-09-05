@@ -1,8 +1,21 @@
+/*
+Autores:
+Nombre: Joseph Piñar Baltodano
+ID: 1 1890 0308
+
+Nombre: Abigail Salas Ramírez
+ID: 4 0257 0890
+
+Nombre: Gianpablo Moreno Castro
+ID: 4 0261 0240
+*/
+
 document.addEventListener("DOMContentLoaded", async function(){
     await tablespacesGraph()
     await updateGraph();
     // Actualiza el gráfico cada 5 segundos
     setInterval(updateGraph, 5000);
+    // Actualiza el gráfico cada minuto
     setInterval(tablespacesGraph, 60000);
 })
 
