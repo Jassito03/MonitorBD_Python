@@ -67,3 +67,14 @@ async function tablespacesGraph(){
     var layout = {barmode: 'stack'};
     Plotly.newPlot('graph_tablespaces', data, layout);
 }
+
+async function fetchEstructuraFisica(params) {
+    const responseEstructuraFisca = await fetch('/estructura_fisica');
+    const dataEstructuraFisica = await responseEstructuraFisca.json();
+    return dataEstructuraFisica;
+}
+
+async function estructuraFisicaDesign(){
+    const dataEstructuraFisica = await fetchEstructuraFisica();
+    const nombre_archivo = dataEstructuraFisica;
+}

@@ -50,6 +50,12 @@ def get_tablespaces():
     info_tablespaces = db.calculo_tablespaces()
     return info_tablespaces.to_json()
 
+@app.route('/estructura_fisica')
+def get_estructura_fisica():
+    db.establecer_conexion()
+    info_estructura_fisica = db.estructura_fisica()
+    return info_estructura_fisica.to_json()
+
 @app.route('/ping')
 def ping():
     return '<p>pong</p>'

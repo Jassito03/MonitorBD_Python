@@ -36,7 +36,6 @@ class Database:
         """Método para iniciar la conexión con la BD"""
         try:
             dns = cx_Oracle.makedsn(self._url, self._port, service_name=self._service_name)
-            print(dns)
             self.connection = cx_Oracle.connect(
                 user=self._username, 
                 password=self._password, 
@@ -55,12 +54,10 @@ class Database:
             return
         try:
             cursor = self.connection.cursor()
-            query = """
-            SELECT
-            (1 - (physical_reads.value / logical_reads.value)) * 100 AS "Tasa de Hit del Buffer Cache (%)"
-            FROM (SELECT value FROM V$SYSSTAT WHERE name = 'db block gets') physical_reads, 
-            (SELECT value FROM V$SYSSTAT WHERE name = 'consistent gets') logical_reads
-            """
+            query = ("SELECT" 
+            "(1 - (physical_reads.value / logical_reads.value)) * 100 AS \"Tasa de Hit del Buffer Cache (%)\" "
+            "FROM (SELECT value FROM V$SYSSTAT WHERE name = 'db block gets') physical_reads, "
+            "(SELECT value FROM V$SYSSTAT WHERE name = 'consistent gets') logical_reads")
             cursor.execute(query)
             tablas = cursor.fetchall()
             
@@ -100,32 +97,16 @@ class Database:
         except cx_Oracle.DatabaseError as e:
             print(f"Error al ejecutar la consulta total de lecturas logicas: {e}")
 
-    def calculo_tablespaces(self):
+    def estructura_fisica(self):
         if self.connection is None:
             print("La conexión no está establecida.")
             return
         try:
             cursor = self.connection.cursor()
-            query = """
-            SELECT a.tablespace_name,
-                b.size_kb / 1024 AS SIZE_MB,
-                a.free_kb / 1024 AS FREE_MB,
-                (b.size_kb - a.free_kb) / 1024 AS USED_MB,
-                TRUNC((a.free_kb / b.size_kb) * 100) AS "FREE_%"
-            FROM (SELECT tablespace_name,
-                        TRUNC(SUM(bytes) / 1024) AS free_kb
-                FROM dba_free_space
-                GROUP BY tablespace_name) a,
-                (SELECT tablespace_name,
-                        TRUNC(SUM(bytes) / 1024) AS size_kb
-                FROM dba_data_files
-                GROUP BY tablespace_name) b
-            WHERE a.tablespace_name = b.tablespace_name
-            ORDER BY "FREE_%" DESC
-            """
+            query = "SELECT l.status AS estado, f.member AS nombre_archivo FROM v$log l JOIN v$logfile f ON l.group# = f.group# ORDER BY l.group#;"
             cursor.execute(query)
-            tablas = cursor.fetchall()
-            df = pd.DataFrame(tablas, columns=['Nombres', 'Tamanio Total', 'Memoria Libre', 'Memoria Usada', 'Porcentaje Libre'])
-            return df
+            estados = cursor.fetchall()
+            cursor.close()
+            return estados
         except cx_Oracle.DatabaseError as e:
-            print(f"Error al ejecutar la consulta del tamaño total de los tablespaces: {e}")
+            print(f"Error al ejecutar la consulta total de lecturas logicas: {e}")
