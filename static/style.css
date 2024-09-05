@@ -39,12 +39,13 @@ section.descripcion_grafico {
 }
 
 footer {
+    justify-content: flex-end;
     background-color:white;
     padding: 1rem;
     text-align: left;
     position: relative;
     bottom: 0;
-    width: 15rem;
+    width: 100vm;
 }
 
 footer aside {
@@ -53,5 +54,5 @@ footer aside {
 }
 
 footer aside p {
-    text-align: right;
+    text-align: left;
 }
