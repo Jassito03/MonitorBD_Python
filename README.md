@@ -1,5 +1,5 @@
 # Universidad Nacional de Costa Rica
-# Monitor de tasa de Hits para una Base de Datos en Oracle
+# Monitor para una Base de Datos en Oracle
 **Curso:** EIF-402: Administración de Base de Datos
 **Profesor:** Msc. Johnny Villalobos Murillo
 **Autores**
@@ -9,15 +9,23 @@
 
 ### Objetivo:
 
-Este proyecto tiene como objetivo desarrollar un sistema de monitoreo para bases de datos Oracle, que permita monitorear el rendimiento y la gestión de recuros del Shared Global Area (SGA), específicamente en el Buffer Caché.
-En donde se podrá visualizar la siguiente información:
-- Porcentaje de la tasa de HITS
-- Total de las lecturas físcas 
-- Total de las lecturas lógicas
+Este proyecto tiene como objetivo desarrollar un sistema de monitoreo para la base de datos de Oracle, que permita monitorear el rendimiento y la gestión de recuros con respecto la tasa de Hits en el Buffer Caché (en el SGA), tablespaces y bitácoras.
+Se implementan 3 tipos de monitoreo para cada uno de los componentes, donde se podrá visualizar la siguiente información:
 
-#### Interpretación de la gráfica
-1. Si se obtiene una tasa alta de Hit del Buffer Caché es indicativa de un buen rendimiento, puesto a que la mayoría de datos solicitados ya están en la caché.
-2. Si la tasa de hit es baja, es indicativo de un mal rendimiento, debido a que los datos solicitados **NO** se encuentran dentro de la caché, por lo que se debe de hacer más las lecturas físicas (en disco), también es posible que se necesite aumentar el tamaño del Buffer Caché. 
+**Memoria:** El buffer caché del SGA es donde se almacenan temporalmente los bloques de datos leídos desde disco. La tasa de hits mide la proporción de lecturas que se realizan desde el caché en lugar de desde el disco.
+- Lecturas lógicas: Son las lecturas que se satisfacen desde el buffer caché.
+- Lecturas físicas: Son las lecturas que requieren acceso al disco. 
+
+Una alta tasa de hits indica un buen uso del caché, mejorando el rendimiento. Mientras que una baja tasa es indicador de que se están realizan una mayor cantidad de lecturas físcas.
+Si la tasa de lecturas físicas es alta, puede ser una señal de que el caché está mal configurado o subdimensionado.
+
+**Estructura Física:** Monitorear los tablespaces es crucial para asegurar que haya suficiente espacio disponible para almacenar datos y evitar interrupciones en el funcionamiento de la base de datos. Un tablespace lleno puede causar errores, lo que impacta en la integridad y disponibilidad de los datos. Además, la distribución y el uso de los datos en los tablespaces puede afectar el rendimiento.
+
+
+**Bitacoras:**Los redo log files son vitales para la recuperación de la base de datos, ya que registran todos los cambios realizados en los datos. Monitorear su estado es importante para:
+- Current: Es el redo log file activo, donde se registran los cambios en tiempo real.
+- Inactive: Son redo logs que ya han sido archivados o que están listos para ser sobrescritos. Un tamaño o configuración inadecuada de los redo logs puede provocar sobreescrituras frecuentes o tiempos de espera largos, afectando el rendimiento y la capacidad de recuperación en caso de fallo.
+
 
 ### Tecnologías utilizadas
 
