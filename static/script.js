@@ -10,6 +10,11 @@ Nombre: Gianpablo Moreno Castro
 ID: 4 0261 0240
 */
 
+// Variables para guardar los datos históricos
+let tasaHitsHistory = [];
+let lecturasFisicasHistory = [];
+let lecturasLogicasHistory = [];
+
 document.addEventListener("DOMContentLoaded", async function(){
     /*
         Función que se ejecuta cuando la página ha cargado completamente.
@@ -54,10 +59,15 @@ async function updateGraph() {
     const lecturas_fisicas = data["lecturas_fisicas"];
     const lecturas_logicas = data["lecturas_logicas"];
 
+    // Agrupar datos en arrays
+    tasaHitsHistory.push(...Object.values(tasa_hits));
+    lecturasFisicasHistory.push(...Object.values(lecturas_fisicas));
+    lecturasLogicasHistory.push(...Object.values(lecturas_logicas));
+
     // Definir los trazos para el gráfico
-    const trace1 = { x: tasa_hits, y: Object.values(tasa_hits), name: 'Tasa de Hit', type: 'Scatter and Lines' };
-    const trace2 = { x: lecturas_fisicas, y:  Object.values(lecturas_fisicas), name: 'Lecturas Físicas', type: 'Scatter and Lines' };
-    const trace3 = { x: lecturas_logicas, y:  Object.values(lecturas_logicas), name: 'Lecturas Lógicas', type: 'Scatter and Lines' };
+    const trace1 = { x: [...Array(tasaHitsHistory.length).keys()], y: tasaHitsHistory, name: 'Tasa de Hit', type: 'Scatter and Lines' };
+    const trace2 = { x: [...Array(lecturasFisicasHistory.length).keys()], y: lecturasFisicasHistory, name: 'Lecturas Físicas', type: 'Scatter and Lines' };
+    const trace3 = { x: [...Array(lecturasLogicasHistory.length).keys()], y: lecturasLogicasHistory, name: 'Lecturas Lógicas', type: 'Scatter and Lines' };
 
     // Definir el diseño del gráfico
     const layout = { title: 'Tasa de Hit y Lecturas', xaxis: { title: 'Segundos' }, yaxis: { title: 'Valores' } };
