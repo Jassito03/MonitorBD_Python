@@ -40,8 +40,7 @@ class Database:
                 user=self._username, 
                 password=self._password, 
                 dsn=dns, 
-                encoding=self._encoding,
-                mode=cx_Oracle.SYSDBA
+                encoding=self._encoding
             )
             print("Conexión exitosa")
         except cx_Oracle.DatabaseError as e:
@@ -133,14 +132,16 @@ class Database:
             return
         try:
             cursor = self.connection.cursor()
-            query = "SELECT l.status AS estado, f.member AS nombre_archivo FROM v$log l JOIN v$logfile f ON l.group# = f.group# ORDER BY l.group#"
+            query = "SELECT l.status AS estado, f.member AS nombre_archivo, l.bytes as tamanio_bytes FROM v$log l JOIN v$logfile f ON l.group# = f.group# ORDER BY l.group#"
             cursor.execute(query)
             estados = cursor.fetchall()
-            df = pd.DataFrame(estados, columns=['Estado', 'Nombre'])
+            df = pd.DataFrame(estados, columns=['Estado', 'Nombre', 'bytes'])
             cursor.close()
             return df
         except cx_Oracle.DatabaseError as e:
             print(f"Error al ejecutar la consulta total de lecturas logicas: {e}")
+
+
 
 myDB = Database()
 myDB.establecer_conexion()

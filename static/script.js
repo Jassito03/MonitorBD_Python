@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async function(){
     // Actualiza el gráfico cada minuto
     setInterval(tablespacesGraph, 60000);
     //Actualizar el gráfico cada minuto
-    setInterval(bitacorasGraph, 60000);
+    setInterval(bitacorasGraph, 5000);
 })
 
 async function fetchData() {
@@ -77,93 +77,27 @@ async function fetchBitacoras() {
 }
 
 async function bitacorasGraph(){
-    console.log("Fetch bitacoras");
     const dataEstructuraFisica = await fetchBitacoras();
-    const nombres = dataEstructuraFisica['Nombres']
-    const estados = dataEstructuraFisica['Estados']
+    
+    const nombres = dataEstructuraFisica['Nombre']
+    const estados = dataEstructuraFisica['Estado']
+    const bytes = dataEstructuraFisica['bytes']
 
-    //Esto es una prueba
-    //Básicamente lo que queda es pasar la información 
-    var allLabels = ['1st', '2nd', '3rd', '4th', '5th'];
+    let traces = [];
+    const indices = Object.keys(nombres);
 
-    var allValues = [
-    [38, 27, 18, 10, 7],
-    [28, 26, 21, 15, 10],
-    [38, 19, 16, 14, 13],
-    [31, 24, 19, 18, 8]
-    ];
+    indices.forEach(index =>{
+        const nombre = nombres[index];
+        const estado = estados[index];
+        const tamanioBytes = bytes[index];
+        
+        const color = estado == 'CURRENT' ? 'green' : 'red';
+        var trace = {x: [index], y: [tamanioBytes], name: `${index} - ${nombre}`,type: 'bar', marker:{ color: color } };
+        traces.push(trace);
+    });
 
-    var ultimateColors = [
-    ['rgb(56, 75, 126)', 'rgb(18, 36, 37)', 'rgb(34, 53, 101)', 'rgb(36, 55, 57)', 'rgb(6, 4, 4)'],
-    ['rgb(177, 127, 38)', 'rgb(205, 152, 36)', 'rgb(99, 79, 37)', 'rgb(129, 180, 179)', 'rgb(124, 103, 37)'],
-    ['rgb(33, 75, 99)', 'rgb(79, 129, 102)', 'rgb(151, 179, 100)', 'rgb(175, 49, 35)', 'rgb(36, 73, 147)'],
-    ['rgb(146, 123, 21)', 'rgb(177, 180, 34)', 'rgb(206, 206, 40)', 'rgb(175, 51, 21)', 'rgb(35, 36, 21)']
-    ];
+    var layout = { xaxis:{title:'Indice Archivos'}, yaxis:{title:'Tamaño en Bytes'}, barmode:'group'};
 
-    var data = [{
-    values: allValues[0],
-    labels: allLabels,
-    type: 'pie',
-    name: 'Starry Night',
-    marker: {
-        colors: ultimateColors[0]
-    },
-    domain: {
-        row: 0,
-        column: 0
-    },
-    hoverinfo: 'label+percent+name',
-    textinfo: 'none'
-    },{
-    values: allValues[1],
-    labels: allLabels,
-    type: 'pie',
-    name: 'Sunflowers',
-    marker: {
-        colors: ultimateColors[1]
-    },
-    domain: {
-        row: 1,
-        column: 0
-    },
-    hoverinfo: 'label+percent+name',
-    textinfo: 'none'
-    },{
-    values: allValues[2],
-    labels: allLabels,
-    type: 'pie',
-    name: 'Irises',
-    marker: {
-        colors: ultimateColors[2]
-    },
-    domain: {
-        row: 0,
-        column: 1
-    },
-    hoverinfo: 'label+percent+name',
-    textinfo: 'none'
-    },{
-    values: allValues[3],
-    labels: allLabels,
-    type: 'pie',
-    name: 'The Night Cafe',
-    marker: {
-        colors: ultimateColors[3]
-    },
-    domain: {
-        x: [0.52,1],
-        y: [0, 0.48]
-    },
-    hoverinfo: 'label+percent+name',
-    textinfo: 'none'
-    }];
-
-    var layout = {
-    height: 400,
-    width: 500,
-    grid: {rows: 2, columns: 2}
-    };
-
-    Plotly.newPlot('graph_bitacoras', data, layout);
+    Plotly.newPlot('graph_bitacoras', traces, layout);
     
 }
