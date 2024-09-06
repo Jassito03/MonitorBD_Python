@@ -1,7 +1,9 @@
 # Universidad Nacional de Costa Rica
 # Monitor para una Base de Datos en Oracle
 **Curso:** EIF-402: Administración de Base de Datos
+
 **Profesor:** Msc. Johnny Villalobos Murillo
+
 **Autores**
 1. Joseph Piñar Baltodano
 2. Abigail Salas Ramírez
@@ -22,7 +24,7 @@ Si la tasa de lecturas físicas es alta, puede ser una señal de que el caché e
 **Estructura Física:** Monitorear los tablespaces es crucial para asegurar que haya suficiente espacio disponible para almacenar datos y evitar interrupciones en el funcionamiento de la base de datos. Un tablespace lleno puede causar errores, lo que impacta en la integridad y disponibilidad de los datos. Además, la distribución y el uso de los datos en los tablespaces puede afectar el rendimiento.
 
 
-**Bitacoras:**Los redo log files son vitales para la recuperación de la base de datos, ya que registran todos los cambios realizados en los datos. Monitorear su estado es importante para:
+**Bitacoras:** Los redo log files son vitales para la recuperación de la base de datos, ya que registran todos los cambios realizados en los datos. Monitorear su estado es importante para:
 - Current: Es el redo log file activo, donde se registran los cambios en tiempo real.
 - Inactive: Son redo logs que ya han sido archivados o que están listos para ser sobrescritos. Un tamaño o configuración inadecuada de los redo logs puede provocar sobreescrituras frecuentes o tiempos de espera largos, afectando el rendimiento y la capacidad de recuperación en caso de fallo.
 
