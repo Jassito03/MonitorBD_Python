@@ -24,13 +24,7 @@ section.grafico h2 {
     font-size: x-large;
 }
 
-section.grafico article {
-    width: 5rem; 
-    height: 5rem; 
-    background-color: black;
-}
-
-section.descripcion_grafico {
+article.descripcion_grafico {
     display: flex; 
     flex-direction: row; 
     align-items: center; 
