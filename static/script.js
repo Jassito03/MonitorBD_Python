@@ -82,6 +82,8 @@ async function bitacorasGraph(){
     const nombres = dataEstructuraFisica['Nombres']
     const estados = dataEstructuraFisica['Estados']
 
+    //Esto es una prueba
+    //Básicamente lo que queda es pasar la información 
     var allLabels = ['1st', '2nd', '3rd', '4th', '5th'];
 
     var allValues = [
