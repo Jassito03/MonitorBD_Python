@@ -12,30 +12,31 @@
     <header>
         <h1>Monitor de base de datos Oracle</h1>
     </header>
-    <section class="grafico"> 
-        <h2>Tasa de hits en el buffer cache</h2>
-        <div id="graph"> <!--Monitoreo Tasa de HITS-->
-        </div>
-    </section>
-    </br>
-    <section class="descripcion_grafico">
-        <p>
-            Lecturas Lógicas: <span id="lecturas_logicas"></span><br>
-            Lecturas Físicas: <span id="lecturas_fisicas"></span><br>
-            Tasa de Hit: <span id="tasa_hit"></span>%
-        </p>
-    </section> 
-    <section class="grafico"> 
-        <h2>Tablespaces</h2>
-        <div id="graph_tablespaces"> <!--Monitoreo Tablespaces-->
-        </div>
-    </section>
-    <section class="grafico"> 
-        <h2>Estructura Fisica</h2>
-        <div id="graph_bitacoras"> <!--Monitoreo RedoLogs-->
-        </div>
-    </section>
-    </br>
+    <main>
+        <section class="grafico"> 
+            <h2>Tasa de hits en el buffer cache</h2>
+            <div id="graph"> <!--Monitoreo Tasa de HITS-->
+            </div>
+            <article class="descripcion_grafico">
+                <p>
+                    Lecturas Lógicas: <span id="lecturas_logicas"></span><br>
+                    Lecturas Físicas: <span id="lecturas_fisicas"></span><br>
+                    Tasa de Hit: <span id="tasa_hit"></span>%
+                </p>
+            </article>
+        </section>
+        <section class="grafico"> 
+            <h2>Tablespaces</h2>
+            <div id="graph_tablespaces"> <!--Monitoreo Tablespaces-->
+            </div>
+        </section>
+        <section class="grafico"> 
+            <h2>Estructura Fisica</h2>
+            <div id="graph_bitacoras"> <!--Monitoreo RedoLogs-->
+            </div>
+        </section>
+        </br>
+    </main>
     <footer>
         <aside>
             <b>Desarrollado por:</b>
