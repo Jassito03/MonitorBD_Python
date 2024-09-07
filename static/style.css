@@ -32,6 +32,13 @@ article.descripcion_grafico {
     width: 100%;
 }
 
+button {
+    background-color: lightgreen;
+    border-radius: 10px;
+    text-align: center;
+    height: 2rem;
+}
+
 footer {
     justify-content: flex-end;
     background-color:white;
