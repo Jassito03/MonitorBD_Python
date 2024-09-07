@@ -130,6 +130,7 @@ class Database:
             cursor.execute(query)
             tablas = cursor.fetchall()
             df = pd.DataFrame(tablas, columns=['Nombres', 'Tamanio Total', 'Memoria Libre', 'Memoria Usada'])
+            cursor.close()
             return df
         except cx_Oracle.DatabaseError as e:
             print(f"Error al ejecutar la consulta del tamaño total de los tablespaces: {e}")
@@ -152,3 +153,16 @@ class Database:
             return df
         except cx_Oracle.DatabaseError as e:
             print(f"Error al ejecutar la consulta total de lecturas logicas: {e}")
+
+    def switch_logfile(self):
+        if self.connection is None:
+            print("La conexión no está establecida")
+            return
+        try:
+            cursor = self.connection.cursor()
+            query = "ALTER SYSTEM SWITCH LOGFILE"
+            cursor.execute(query)
+            cursor.close()
+            return
+        except cx_Oracle.DatabaseError as e:
+            print(f"Error al ejecutar la consulta para hacer switch del logfile actual: {e}")

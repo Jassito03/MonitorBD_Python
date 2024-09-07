@@ -9,7 +9,7 @@ ID: 4 0257 0890
 Nombre: Gianpablo Moreno Castro
 ID: 4 0261 0240
 """
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, request
 from database import Database
 import pandas as pd
 
@@ -22,12 +22,15 @@ para acceder a la información relacionada con el rendimiento de la base de dato
 como la tasa de hit del buffer caché, el estado de los tablespaces y las bitácoras (redo logs).
 """
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
     """
     Ruta de inicio que devuelve la página principal.
     Renderiza el archivo HTML `index.html` como respuesta al acceder a la raíz del servidor.
     """
+    if request.method == 'POST':
+        db.establecer_conexion()
+        db.switch_logfile()
     return render_template('index.html')
 
 @app.route('/data')
@@ -41,8 +44,7 @@ def get_data():
     db.establecer_conexion()  # Establecer la conexión con la base de datos
     tasa_hit = []
     lecturas_fisicas = []
-    lecturas_logicas = []
-    
+    lecturas_logicas = []  
     # Se recolectan los datos de la base de datos en múltiples iteraciones
     for x in range(5):
         tasa_hit.append(db.tasa_de_hit())  # Obtener la tasa de hits
@@ -55,10 +57,8 @@ def get_data():
             'lecturas_fisicas': lecturas_fisicas,
             'lecturas_logicas': lecturas_logicas
         }
-    
     # Crear un DataFrame a partir de los datos recolectados
     df = pd.DataFrame(data=data, columns=['tasa_hits', 'lecturas_fisicas', 'lecturas_logicas'])
-    
     # Retornar el DataFrame en formato JSON
     return df.to_json()
 
